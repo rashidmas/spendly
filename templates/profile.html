@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Profile — Spendly{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container" style="max-width: 900px;">
+        <div class="auth-header">
+            <h1 class="auth-title">Welcome, {{ user.name }}</h1>
+            <p class="auth-subtitle">Your financial snapshot</p>
+        </div>
+
+        <div class="auth-card" style="margin-bottom: 2rem;">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Total spending:</strong> ₹{{ "%.2f"|format(total_spend) }}</p>
+            <div class="hero-actions" style="margin-top: 1rem;">
+                <a href="{{ url_for('add_expense') }}" class="btn-primary">Add expense</a>
+                <a href="{{ url_for('logout') }}" class="btn-ghost">Logout</a>
+            </div>
+        </div>
+
+        <div class="auth-card">
+            <h2 style="margin-bottom: 1rem;">Recent expenses</h2>
+            {% if recent_expenses %}
+                {% for expense in recent_expenses %}
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #e5e7eb; padding: 0.75rem 0;">
+                        <div>
+                            <strong>{{ expense.title }}</strong><br>
+                            <small>{{ expense.category }} · {{ expense.expense_date }}</small>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong>₹{{ "%.2f"|format(expense.amount) }}</strong><br>
+                            <small>
+                                <a href="{{ url_for('edit_expense', id=expense.id) }}">Edit</a>
+                                |
+                                <a href="{{ url_for('delete_expense', id=expense.id) }}">Delete</a>
+                            </small>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No expenses logged yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
